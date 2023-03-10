@@ -1,0 +1,19 @@
+.topics {
+     h1 {
+          font-size: 30px;
+          font-weight: 400;
+          margin-bottom: 30px;
+     }
+     .cards {
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 10px;
+          .card {
+               width: 45%;
+          }
+          .topic-title {
+               font-size: 20px;
+          }
+     }
+}

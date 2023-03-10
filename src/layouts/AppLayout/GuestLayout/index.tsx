@@ -1,7 +1,12 @@
-import React from "react";
+import RouteGenerator from "../routeGenerator";
+import "./layout.style.scss";
 
 function GuestLayout() {
-  return <div>GuestLayout</div>;
+  return (
+    <div className="guest-layout">
+      <RouteGenerator />
+    </div>
+  );
 }
 
 export default GuestLayout;

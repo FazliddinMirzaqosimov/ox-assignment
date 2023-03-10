@@ -1,29 +1,30 @@
-import React from "react";
-import {
-  LaptopOutlined,
-  NotificationOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
-import type { MenuProps } from "antd";
-import { Breadcrumb, Layout, Menu, theme } from "antd";
+import React, { useState } from "react";
+import { Layout } from "antd";
+import NavBar from "./NavBar";
+import Component from "./Component";
+import AppMenu from "./AppMenu";
 
-const { Content, Sider } = Layout;
+const { Sider } = Layout;
 
 const MainLayout: React.FC = () => {
+  const [collapsed, setCollapsed] = useState<boolean>(false);
+  console.log(collapsed);
+
   return (
     <Layout style={{ height: "100vh" }}>
-      <Sider width={200} style={{ background: "white" }}></Sider>
+      <Sider
+        width={200}
+        style={{ background: "white" }}
+        trigger={null}
+        collapsible
+        collapsed={collapsed}
+      >
+        <AppMenu />
+      </Sider>
       <Layout>
-        <nav>weweewwe</nav>
+        <NavBar {...{ collapsed, setCollapsed }} />
         <Layout>
-          <Content
-            style={{
-              background: "white",
-              overflow: "auto",
-            }}
-          >
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium
-          </Content>
+          <Component />
         </Layout>
       </Layout>
     </Layout>

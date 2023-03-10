@@ -1,20 +1,23 @@
 import React from "react";
 import { AiFillStop } from "react-icons/ai";
 
-type MenuRoutesType = {
+export type MenuRoutesType = {
   id: string | number;
   name: string;
-  children: {
-    id: string | number;
-    link: string;
-    title: string;
-    icon: JSX.Element;
-  }[];
+  type: string;
+  children: ChildrenType[];
+};
+export type ChildrenType = {
+  id: string | number;
+  link: string;
+  title: string;
+  icon: JSX.Element;
 };
 
 export const userMenuRoutes: MenuRoutesType[] = [
   {
     id: "user",
+    type: "group",
     name: "User pages",
     children: [
       {
@@ -25,7 +28,7 @@ export const userMenuRoutes: MenuRoutesType[] = [
       },
       {
         id: "2",
-        link: "/sample/quiz",
+        link: "/sample/topics",
         title: "Test Page",
         icon: <AiFillStop />,
       },
@@ -35,6 +38,7 @@ export const userMenuRoutes: MenuRoutesType[] = [
 export const adminMenuRoutes: MenuRoutesType[] = [
   {
     id: "user",
+    type: "group",
     name: "User pages",
     children: [
       {
@@ -45,7 +49,7 @@ export const adminMenuRoutes: MenuRoutesType[] = [
       },
       {
         id: "2",
-        link: "/sample/quiz",
+        link: "/sample/topics",
         title: "Test Page",
         icon: <AiFillStop />,
       },
@@ -53,22 +57,23 @@ export const adminMenuRoutes: MenuRoutesType[] = [
   },
   {
     id: "admin",
+    type: "group",
     name: "Admin pages",
     children: [
       {
-        id: "1",
-        link: "/dashboard/sections",
-        title: "Sections Page",
+        id: "3",
+        link: "/dashboard/topics",
+        title: "Topics Page",
         icon: <AiFillStop />,
       },
       {
-        id: "2",
+        id: "4",
         link: "/dashboard/tests",
         title: "Tests Page",
         icon: <AiFillStop />,
       },
       {
-        id: "3",
+        id: "5",
         link: "/dashboard/users",
         title: "Users Page",
         icon: <AiFillStop />,
