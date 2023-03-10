@@ -1,19 +1,5 @@
-import {
-  EyeOutlined,
-  FileImageOutlined,
-  SyncOutlined,
-} from "@ant-design/icons";
-import {
-  Avatar,
-  Button,
-  Col,
-  Image,
-  Input,
-  message,
-  Row,
-  Space,
-  Spin,
-} from "antd";
+import { SyncOutlined } from "@ant-design/icons";
+import { Button, Col, Input, message, Row, Space, Spin } from "antd";
 import MainTable from "../../../components/Table";
 import { useEffect, useMemo, useReducer } from "react";
 import PostEdit from "../../dashboard/SectionPage/PostEdit";

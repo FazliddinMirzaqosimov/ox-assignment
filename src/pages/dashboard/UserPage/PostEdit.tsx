@@ -1,31 +1,21 @@
-import { InboxOutlined, UploadOutlined } from "@ant-design/icons";
-import {
-  Button,
-  Form,
-  Input,
-  message,
-  Modal,
-  Select,
-  Spin,
-  Upload,
-} from "antd";
+import { InboxOutlined } from "@ant-design/icons";
+import { Form, Input, message, Modal, Select, Spin } from "antd";
 import { useEffect, useState } from "react";
 import { setLoading, setVisible } from "./ReducerActions";
-import { photoType, PostEditPropType } from "./Types";
-import { UploadFile } from "antd/lib/upload/interface";
+import { PostEditPropType } from "./Types";
 import jwtAxios from "auth/jwt-auth/jwtaxios";
 import Dragger from "antd/es/upload/Dragger";
 import { JwtUserType } from "auth/jwt-auth/JWTAuthAuthProvider";
 
-function loadImage(photo: any): any {
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    photo && reader.readAsDataURL(photo);
-    reader.onload = () => {
-      resolve(reader.result);
-    };
-  });
-}
+// function loadImage(photo: any): any {
+//   return new Promise((resolve) => {
+//     const reader = new FileReader();
+//     photo && reader.readAsDataURL(photo);
+//     reader.onload = () => {
+//       resolve(reader.result);
+//     };
+//   });
+// }
 
 function PostEdit({ title, state, getItems, dispatch }: PostEditPropType) {
   // STATES

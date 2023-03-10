@@ -1,5 +1,4 @@
 import { UploadFile } from "antd/lib/upload/interface";
-import { JwtUserType } from "auth/jwt-auth/JWTAuthAuthProvider";
 import React from "react";
 
 export type appStateType = {

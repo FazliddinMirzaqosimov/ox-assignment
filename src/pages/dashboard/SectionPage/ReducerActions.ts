@@ -1,4 +1,3 @@
-import { JwtUserType } from "auth/jwt-auth/JWTAuthAuthProvider";
 import { ItemType } from "./Types";
 
 export const setVisible = (payload: boolean) => {
