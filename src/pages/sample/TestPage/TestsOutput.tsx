@@ -1,17 +1,25 @@
-import { message } from "antd";
+import { Button, message } from "antd";
 import { TestType } from "pages/dashboard/QuizPage/Types";
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import GameOver from "./GameOver";
 import Test from "./Test";
 
 type PropType = {
   tests: TestType[] | null;
 };
+
+export type natijaType = {
+  max: number;
+  current: number;
+  found: number;
+};
 function TestOutput({ tests }: PropType): JSX.Element {
-  const [testsLength, setTestsLength] = useState<{
-    max: number;
-    current: number;
-    found: number;
-  }>({ max: 0, current: 0, found: 0 });
+  const [testsLength, setTestsLength] = useState<natijaType>({
+    max: 0,
+    current: 0,
+    found: 0,
+  });
 
   useEffect(() => {
     setTestsLength({ ...testsLength, max: tests?.length || 0 });
@@ -41,18 +49,7 @@ function TestOutput({ tests }: PropType): JSX.Element {
     return <h1>There is no questions yet</h1>;
   }
   if (testsLength.max === testsLength.current) {
-    return (
-      <>
-        <h1>Game Over </h1>
-        <ul>
-          <li>Questions - {testsLength.max}</li>
-          <li>Found - {testsLength.found}</li>
-          <li>
-            Precent - {Math.round(100 * (testsLength.found / testsLength.max))}%
-          </li>
-        </ul>
-      </>
-    );
+    return <GameOver natija={testsLength} />;
   }
   return (
     <div>

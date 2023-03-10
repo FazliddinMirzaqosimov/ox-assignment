@@ -1,28 +1,42 @@
-import { Divider, Menu } from "antd";
+import { Divider, Drawer } from "antd";
 import MenuGenerator from "./MenuGenerator";
 import "./menu.style.scss";
 import { useJWTAuthActions } from "auth/jwt-auth/JWTAuthAuthProvider";
+import { NavLink } from "react-router-dom";
+type PropType = {
+  open: boolean;
+  setOpen: (a: boolean) => void;
+};
 
-function AppMenu() {
+function AppMenu({ open, setOpen }: PropType) {
   const { logout } = useJWTAuthActions();
-  console.log(logout);
-
+  const onClose = () => {
+    setOpen(false);
+  };
   return (
-    <Menu className="menu" openKeys={["1"]}>
-      <MenuGenerator />
-      <Menu.ItemGroup
-        key={"auth"}
-        title={
-          <Divider orientation="left" style={{ padding: 0, margin: 0 }}>
-            <p style={{ fontSize: 12, fontWeight: 400 }}>{"Auth pages"}</p>
-          </Divider>
-        }
-      >
-        <Menu.Item key={"01"} onClick={logout}>
-          Logout
-        </Menu.Item>
-      </Menu.ItemGroup>
-    </Menu>
+    <Drawer
+      title="Menu"
+      placement={"left"}
+      closable={false}
+      onClose={onClose}
+      open={open}
+      key={"left"}
+      width={240}
+    >
+      {" "}
+      <div className="menu">
+        <MenuGenerator />
+
+        <Divider orientation="left">
+          <p style={{ fontSize: 12, fontWeight: 400 }}>{"Auth pages"}</p>
+        </Divider>
+        <NavLink to="/">
+          <div className="menu-item" onClick={logout}>
+            Logout
+          </div>
+        </NavLink>
+      </div>
+    </Drawer>
   );
 }
 

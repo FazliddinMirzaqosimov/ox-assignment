@@ -54,7 +54,6 @@ const JWTAuthAuthProvider = ({ children }: PropType) => {
     isAuthenticated: false,
     isLoading: true,
   });
-  console.log(JWTAuthData.user);
 
   const navigator = useNavigate();
   useEffect(() => {

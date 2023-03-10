@@ -7,32 +7,27 @@ import {
   userMenuRoutes,
 } from "../../../../pages/menuRoutes";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const renderMenuItem = (item: ChildrenType) => {
-  console.log(item.id);
-
   return (
-    <Menu.Item key={item.id} icon={item.icon}>
-      <Link to={item.link} style={{ margin: "10px 20px" }}>
-        {item.title}
-      </Link>
-    </Menu.Item>
+    <NavLink key={item.id} to={item.link} style={{ padding: 0, margin: 0 }}>
+      <div className="menu-item">
+        {item.icon} - {item.title}
+      </div>
+    </NavLink>
   );
 };
 
 const renderMenu = (item: MenuRoutesType) => {
   return item.type === "group" ? (
-    <Menu.ItemGroup
-      key={item.name}
-      title={
-        <Divider orientation="left" style={{ padding: 0, margin: 0 }}>
-          <p style={{ fontSize: 12, fontWeight: 400 }}>{item.name}</p>
-        </Divider>
-      }
-    >
+    <>
+      <Divider orientation="left">
+        <p style={{ fontSize: 12, fontWeight: 400 }}>{item.name}</p>
+      </Divider>
+
       {item.children.map(renderMenuItem)}
-    </Menu.ItemGroup>
+    </>
   ) : (
     <Menu.Item key={item.id}></Menu.Item>
   );

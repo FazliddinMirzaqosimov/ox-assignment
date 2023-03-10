@@ -1,6 +1,6 @@
 import jwtAxios from "auth/jwt-auth/jwtaxios";
 import { TestType } from "pages/dashboard/QuizPage/Types";
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import shuffle from "utils/shuffle";
 import TestsOutput from "./TestsOutput";
@@ -13,7 +13,7 @@ function TestPage() {
   useEffect(() => {
     jwtAxios
       .get(`/tests?section=${topic}`)
-      .then((res) => setTests(res.data.data.tests))
+      .then((res) => setTests(shuffle<TestType>(res.data.data.tests)))
       .catch((err) => console.log(err));
   }, []);
 

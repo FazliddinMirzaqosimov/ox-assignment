@@ -1,5 +1,6 @@
 import { Button, Card, Col, Image, Row } from "antd";
-import { TestType } from "pages/dashboard/QuizPage/Types";
+import { AnswerType, TestType } from "pages/dashboard/QuizPage/Types";
+import shuffle from "utils/shuffle";
 
 type PropTypes = {
   test: TestType;
@@ -14,7 +15,7 @@ function Test({ test, handleAnswer, nextQuestion }: PropTypes) {
         <Card>
           {test.image ? (
             <div className="image-container">
-              <Image src={"http://" + test.image} className="image-test" />
+              <Image src={test.image} className="image-test" />
             </div>
           ) : (
             ""
@@ -22,7 +23,7 @@ function Test({ test, handleAnswer, nextQuestion }: PropTypes) {
           <p className="question-text">{test.question}</p>
         </Card>
         <div className="answers">
-          {test.variants.map((el) => (
+          {shuffle<AnswerType>(test.variants).map((el) => (
             <div
               className="answer"
               data-id={el.isAnswer}

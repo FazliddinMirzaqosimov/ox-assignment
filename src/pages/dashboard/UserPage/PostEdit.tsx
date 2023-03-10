@@ -5,20 +5,22 @@ import { setLoading, setVisible } from "./ReducerActions";
 import { PostEditPropType } from "./Types";
 import jwtAxios from "auth/jwt-auth/jwtaxios";
 import Dragger from "antd/es/upload/Dragger";
-import { JwtUserType } from "auth/jwt-auth/JWTAuthAuthProvider";
+import { JwtUserType, useJWTAuth } from "auth/jwt-auth/JWTAuthAuthProvider";
+import { UploadChangeParam, UploadFile } from "antd/es/upload";
 
-// function loadImage(photo: any): any {
-//   return new Promise((resolve) => {
-//     const reader = new FileReader();
-//     photo && reader.readAsDataURL(photo);
-//     reader.onload = () => {
-//       resolve(reader.result);
-//     };
-//   });
-// }
+function loadImage(photo: any): any {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    photo && reader.readAsDataURL(photo);
+    reader.onload = () => {
+      resolve(reader.result);
+    };
+  });
+}
 
 function PostEdit({ title, state, getItems, dispatch }: PostEditPropType) {
   // STATES
+  // console.log(jwtAxios.defaults.headers.common.Authorization);
 
   const [editItem, setEditItem] = useState<JwtUserType>(null);
   const [form] = Form.useForm();
@@ -46,17 +48,15 @@ function PostEdit({ title, state, getItems, dispatch }: PostEditPropType) {
 
   const postItem = (data: JwtUserType & { photo: any }) => {
     const formData: FormData = new FormData();
+
     data?.email && formData.append("email", data?.email);
     data?.name && formData.append("name", data?.name);
     data?.role && formData.append("role", data?.role);
     data?.password && formData.append("password", data?.password);
-    data?.photo?.file?.originFileObj &&
-      data?.photo &&
-      formData.append("photo", data.photo.file.originFileObj);
+    data.photo?.file && formData.append("photo", data.photo.file);
+    console.log([...formData]);
 
-    console.log(Object.fromEntries(formData.entries()));
     dispatch(setLoading({ ...state.loading, modal: true }));
-
     jwtAxios[editItem?._id ? "patch" : "post"](
       `/users/${editItem?._id || ""}`,
       formData
@@ -85,6 +85,9 @@ function PostEdit({ title, state, getItems, dispatch }: PostEditPropType) {
   };
 
   //UPLOAD DRAGGER FUNCTIONS
+  const handleChange = (info: UploadChangeParam<UploadFile<any>>) => {
+    info.file.status = "done";
+  };
 
   return (
     <Modal
@@ -103,7 +106,6 @@ function PostEdit({ title, state, getItems, dispatch }: PostEditPropType) {
           form={form}
           onFinish={handleSubmit}
           labelCol={{ span: 5 }}
-          // wrapperCol={{span: 16}}
           initialValues={{
             role: "user",
           }}
@@ -160,7 +162,14 @@ function PostEdit({ title, state, getItems, dispatch }: PostEditPropType) {
             />
           </Form.Item>
           <Form.Item name="photo">
-            <Dragger beforeUpload={() => true}>
+            <Dragger
+              beforeUpload={() => false}
+              onChange={handleChange}
+              multiple={false}
+              listType="picture"
+              maxCount={1}
+              accept="image/png, image/jpeg, image/jfif, image/svg"
+            >
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />
               </p>

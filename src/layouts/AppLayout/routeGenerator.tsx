@@ -12,7 +12,6 @@ const useGetRoutes = () => {
 
 function RouteGenerator() {
   const routes = useGetRoutes();
-  console.log(routes);
 
   return (
     <>

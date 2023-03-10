@@ -127,7 +127,7 @@ const UserPage = () => {
       render: (imgUrl: string) => {
         return imgUrl && imgUrl !== "undefined" ? (
           <Image
-            src={`http://localhost:3000/api/v1/${imgUrl}`}
+            src={`${imgUrl}`}
             style={{ height: 40, width: 40, objectFit: "cover" }}
             preview={{
               maskClassName: "customize-mask",
@@ -148,7 +148,7 @@ const UserPage = () => {
       <Row gutter={12} style={{ padding: "30px 0" }}>
         <Col span={16}>
           <Input
-            size="large"
+            size="middle"
             placeholder="Search..."
             onChange={(e) => dispatch(setInput(e.target.value.toLowerCase()))}
           ></Input>

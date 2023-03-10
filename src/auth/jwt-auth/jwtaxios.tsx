@@ -3,7 +3,8 @@ import axios from "axios";
 const jwtAxios = axios.create({
   baseURL: "http://localhost:3000/api/v1",
   headers: {
-    "Content-Type": "application/json",
+    "Content-Type":
+      "multipart/form-data; boundary=<calculated when request is sent>",
   },
 });
 export const setToken = (token?: string, id?: string) => {

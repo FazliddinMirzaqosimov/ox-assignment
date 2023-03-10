@@ -10,7 +10,6 @@ function SectionPage() {
   useEffect(() => {
     jwtAxios.get("/sections").then((res) => setTopics(res.data.data.sections));
   }, []);
-  console.log(topics);
 
   return (
     <>

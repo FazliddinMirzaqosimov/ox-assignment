@@ -9,6 +9,7 @@ import { setLoading, setVisible } from "./ReducerActions";
 import { PostEditPropType, TestType, TopicType } from "./Types";
 import jwtAxios from "auth/jwt-auth/jwtaxios";
 import Dragger from "antd/es/upload/Dragger";
+import { UploadChangeParam, UploadFile } from "antd/es/upload";
 
 function PostEdit({ title, state, getItems, dispatch }: PostEditPropType) {
   // STATES
@@ -73,8 +74,7 @@ function PostEdit({ title, state, getItems, dispatch }: PostEditPropType) {
     data.question && formData.append("question", data.question);
     data.topic && formData.append("section", data.topic);
 
-    data.image?.file?.originFileObj &&
-      formData.append("image", data.image.file.originFileObj);
+    data.image?.file && formData.append("photo", data.image.file);
 
     console.log(Object.fromEntries(formData.entries()));
     dispatch(setLoading({ ...state.loading, modal: true }));
@@ -117,7 +117,9 @@ function PostEdit({ title, state, getItems, dispatch }: PostEditPropType) {
   };
 
   //UPLOAD DRAGGER FUNCTIONS
-
+  const handleChange = (info: UploadChangeParam<UploadFile<any>>) => {
+    info.file.status = "done";
+  };
   return (
     <Modal
       onCancel={() => {
@@ -224,7 +226,14 @@ function PostEdit({ title, state, getItems, dispatch }: PostEditPropType) {
             )}
           </Form.List>
           <Form.Item name="image">
-            <Dragger beforeUpload={() => true}>
+            <Dragger
+              beforeUpload={() => false}
+              onChange={handleChange}
+              multiple={false}
+              listType="picture"
+              maxCount={1}
+              accept="image/png, image/jpeg, image/jfif, image/svg"
+            >
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />
               </p>

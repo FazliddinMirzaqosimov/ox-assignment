@@ -103,7 +103,7 @@ const SectionPage = () => {
       <Row gutter={12} style={{ padding: "30px 0" }}>
         <Col span={16}>
           <Input
-            size="large"
+            size="middle"
             placeholder="Search..."
             onChange={(e) => dispatch(setInput(e.target.value.toLowerCase()))}
           ></Input>
