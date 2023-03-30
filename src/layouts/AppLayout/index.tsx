@@ -10,7 +10,7 @@ function AppLayout() {
   return (
     <Spin spinning={isLoading}>
       <div className="layout">
-        {isAuthenticated ? <MainLayout /> : <GuestLayout />}
+        {isLoading ? "" : isAuthenticated ? <MainLayout /> : <GuestLayout />}
       </div>
     </Spin>
   );

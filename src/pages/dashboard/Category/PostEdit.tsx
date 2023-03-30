@@ -6,7 +6,7 @@ import {
 import { Button, Form, Input, message, Modal, Select, Space, Spin } from "antd";
 import { useEffect, useState } from "react";
 import { setLoading, setVisible } from "./ReducerActions";
-import { PostEditPropType, TestType, TopicType } from "./Types";
+import { PostEditPropType, CategoryType, TopicType } from "./Types";
 import jwtAxios from "auth/jwt-auth/jwtaxios";
 import Dragger from "antd/es/upload/Dragger";
 import { UploadChangeParam, UploadFile } from "antd/es/upload";
@@ -14,7 +14,7 @@ import { UploadChangeParam, UploadFile } from "antd/es/upload";
 function PostEdit({ title, state, getItems, dispatch }: PostEditPropType) {
   // STATES
 
-  const [editItem, setEditItem] = useState<TestType | null>(null);
+  const [editItem, setEditItem] = useState<CategoryType | null>(null);
   const [selectOptions, setSelectOptions] = useState<
     { value: string; label: string }[] | undefined
   >(undefined);
@@ -66,21 +66,20 @@ function PostEdit({ title, state, getItems, dispatch }: PostEditPropType) {
     });
   }, [state.editItemId]);
 
-  const postItem = (data: TestType & { image: any }) => {
+  const postItem = (data: CategoryType & { image: any }) => {
     console.log(data);
 
     const formData: FormData = new FormData();
-    data.variants && formData.append("variants", JSON.stringify(data.variants));
-    data.question && formData.append("question", data.question);
-    data.topic && formData.append("section", data.topic);
 
-    data.image?.file && formData.append("photo", data.image.file);
+    data.nameUz && formData.append("nameUz", data.nameUz);
+    data.nameRu && formData.append("nameRu", data.nameRu);
+    data.image?.file && formData.append("media", data.image.file);
 
-    console.log(Object.fromEntries(formData.entries()));
+    console.log([...formData]);
     dispatch(setLoading({ ...state.loading, modal: true }));
 
     jwtAxios[editItem?._id ? "patch" : "post"](
-      `/tests/${editItem?._id || ""}`,
+      `/categories/${editItem?._id || ""}`,
       formData
     )
       .finally(() => {
@@ -103,17 +102,7 @@ function PostEdit({ title, state, getItems, dispatch }: PostEditPropType) {
 
   // Handlers
   const handleSubmit = () => {
-    const formValue = form.getFieldsValue();
-
-    formValue.variants = [
-      { title: formValue.answer, isAnswer: true },
-      ...formValue.variants
-        .filter((variant: any) => variant)
-        .map((variant: { variant: string }) => {
-          return { title: variant.variant, isAnswer: false };
-        }),
-    ];
-    postItem(formValue);
+    postItem(form.getFieldsValue());
   };
 
   //UPLOAD DRAGGER FUNCTIONS
@@ -143,88 +132,31 @@ function PostEdit({ title, state, getItems, dispatch }: PostEditPropType) {
           }}
         >
           <Form.Item
-            name="topic"
-            label={"Topics"}
+            name="nameUz"
+            label={"Name (uz)"}
             rules={[
               {
                 required: true,
-                message: "you need to provide topic",
+                message: "you need to provide nameUz",
               },
             ]}
             hasFeedback
           >
-            <Select options={selectOptions} />
-          </Form.Item>
+            <Input />
+          </Form.Item>{" "}
           <Form.Item
-            name="question"
-            label={"Question"}
+            name="nameRu"
+            label={"Name (ru)"}
             rules={[
               {
                 required: true,
-                message: "you need to provide question",
+                message: "you need to provide nameRu",
               },
             ]}
             hasFeedback
           >
             <Input />
           </Form.Item>
-          <Form.Item
-            name="answer"
-            label={"Answer"}
-            rules={[
-              {
-                required: true,
-                message: "you need to provide answer",
-              },
-            ]}
-            hasFeedback
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.List name="variants">
-            {(fields, { add, remove }) => (
-              <>
-                {fields.map(({ key, name, ...restField }) => (
-                  <Space
-                    key={key}
-                    style={{
-                      display: "flex",
-                      marginBottom: 8,
-                    }}
-                    align="baseline"
-                  >
-                    <Form.Item
-                      {...restField}
-                      label={
-                        <MinusCircleOutlined onClick={() => remove(name)} />
-                      }
-                      rules={[
-                        {
-                          required: true,
-                          message: "you need to provide answer",
-                        },
-                      ]}
-                      name={[name, "variant"]}
-                      style={{ width: "550px" }}
-                    >
-                      <Input placeholder="Variant" />
-                    </Form.Item>
-                  </Space>
-                ))}
-                <Form.Item>
-                  <Button
-                    type="dashed"
-                    onClick={() => add()}
-                    block
-                    icon={<PlusOutlined />}
-                  >
-                    Add variant
-                  </Button>
-                </Form.Item>
-              </>
-            )}
-          </Form.List>
           <Form.Item name="image">
             <Dragger
               beforeUpload={() => false}

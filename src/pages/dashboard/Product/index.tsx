@@ -17,8 +17,6 @@ import {
 import MainTable from "../../../components/Table";
 import { useEffect, useMemo, useReducer } from "react";
 import PostEdit from "./PostEdit";
-import "../dashboard.style.scss";
-
 import {
   setEditItemId,
   setInput,
@@ -26,9 +24,9 @@ import {
   setLoading,
   setVisible,
 } from "./ReducerActions";
-import { appActionType, appStateType } from "./Types";
+import { appActionType, appStateType, ItemType } from "./Types";
 import jwtAxios from "auth/jwt-auth/jwtaxios";
-import { JwtUserType } from "auth/jwt-auth/JWTAuthAuthProvider";
+import "../dashboard.style.scss";
 
 function reducer(state: appStateType, action: appActionType): appStateType {
   switch (action.type) {
@@ -47,7 +45,7 @@ function reducer(state: appStateType, action: appActionType): appStateType {
   }
 }
 
-const UserPage = () => {
+const SectionPage = () => {
   const [state, dispatch] = useReducer(reducer, {
     visible: false,
     editItemId: "",
@@ -56,13 +54,17 @@ const UserPage = () => {
     items: [],
   });
   const { state: linkState }: { state: { title: string } } = {
-    state: { title: "Users" },
+    state: { title: "Topics" },
   };
 
   const filteredItems = useMemo(
     () =>
-      state.items.filter((item: JwtUserType) =>
-        item?.username?.toLowerCase().includes(state.input)
+      state.items.filter(
+        (item: ItemType) =>
+          item?.titleUz?.toLowerCase().includes(state.input) ||
+          item?.titleRu?.toLowerCase().includes(state.input) ||
+          item?.descriptionUz?.toLowerCase().includes(state.input) ||
+          item?.descriptionRu?.toLowerCase().includes(state.input)
       ),
     [state.input, state.items]
   );
@@ -71,17 +73,18 @@ const UserPage = () => {
     dispatch(setItems([]));
     dispatch(setLoading({ ...state.loading, table: true }));
 
-    jwtAxios.get(`/users`).then((res) => {
-      const users: JwtUserType[] = res.data.data.users;
+    jwtAxios.get(`/products`).then((res) => {
+      const products: ItemType[] = res.data.data.products;
+      console.log(products);
 
       dispatch(setLoading({ ...state.loading, table: false }));
-      dispatch(setItems(users));
+      dispatch(setItems(products));
     });
   };
   const deleteItem = ({ _id: id }: { _id: string }) => {
     dispatch(setLoading({ ...state.loading, table: true }));
     jwtAxios
-      .delete(`/users/${id}`)
+      .delete(`/sections/${id}`)
       .then(() => {
         getItems();
         message.success("Deleted succesfully");
@@ -94,7 +97,7 @@ const UserPage = () => {
       });
   };
 
-  const editBtn = (item: JwtUserType) => {
+  const editBtn = (item: ItemType) => {
     dispatch(setEditItemId(item?._id || ""));
     dispatch(setVisible(true));
   };
@@ -104,28 +107,23 @@ const UserPage = () => {
   const columns = [
     {
       key: 1,
-      dataIndex: "email",
-      title: "Email",
+      dataIndex: "titleUz",
+      title: "Title (uz)",
     },
     {
       key: 2,
-      dataIndex: "name",
-      title: "Name",
+      dataIndex: "titleRu",
+      title: "Title (ru)",
     },
     {
       key: 3,
-      dataIndex: "role",
-      title: "Role",
-    },
-    {
-      key: 4,
       title: "Image",
-      dataIndex: "photo",
+      dataIndex: "images",
       width: 80,
-      render: (imgUrl: string) => {
-        return imgUrl && imgUrl !== "undefined" ? (
+      render: (imgUrl: string[]) => {
+        return imgUrl[0] ? (
           <Image
-            src={`${imgUrl}`}
+            src={`${process.env.REACT_APP_API_URL}/img/${imgUrl}`}
             style={{ height: 40, width: 40, objectFit: "cover" }}
             preview={{
               maskClassName: "customize-mask",
@@ -138,7 +136,6 @@ const UserPage = () => {
       },
     },
   ];
-
   return (
     <>
       <h2>{linkState.title} list</h2>
@@ -190,4 +187,4 @@ const UserPage = () => {
   );
 };
 
-export default UserPage;
+export default SectionPage;

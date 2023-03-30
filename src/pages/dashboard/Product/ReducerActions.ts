@@ -1,10 +1,10 @@
-import { TestType } from "./Types";
+import { ItemType } from "./Types";
 
 export const setVisible = (payload: boolean) => {
   return { type: "SET_VISIBLE", payload };
 };
 
-export const setItems = (payload: TestType[]) => {
+export const setItems = (payload: ItemType[]) => {
   return { type: "SET_ITEMS", payload };
 };
 

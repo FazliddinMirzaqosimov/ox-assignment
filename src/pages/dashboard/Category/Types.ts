@@ -6,13 +6,12 @@ export type appStateType = {
   editItemId: string;
   input: string;
   loading: appLoadingType;
-  items: TestType[];
+  items: CategoryType[];
 };
 
-export type TestType = {
-  question: string;
-  variants: AnswerType[];
-  topic: string;
+export type CategoryType = {
+  nameUz: string;
+  nameRu: string;
   image: string;
   _id: string;
 };

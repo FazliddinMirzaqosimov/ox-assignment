@@ -2,7 +2,6 @@ import { Navigate } from "react-router-dom";
 import { authPages } from "./auth";
 import { dashboardPages } from "./dashboard";
 import NotFoundPage from "./NotFoundPage";
-import { samplePages } from "./sample";
 
 export const unAuthorizedStructure = {
   paths: [
@@ -14,8 +13,13 @@ export const unAuthorizedStructure = {
     },
     {
       id: "-1",
-      path: "*",
+      path: "/not-found",
       pageElement: <NotFoundPage />,
+    },
+    {
+      id: "-2",
+      path: "*",
+      pageElement: <Navigate to="/not-found" replace={true} />,
     },
   ],
 };
@@ -23,16 +27,20 @@ export const unAuthorizedStructure = {
 export const authorizedStructure = {
   paths: [
     ...dashboardPages,
-    ...samplePages,
     {
       id: "0",
       path: "/",
-      pageElement: <Navigate to="sample/home" replace={true} />,
+      pageElement: <Navigate to="dashboard/articles" replace={true} />,
     },
     {
       id: "-1",
-      path: "*",
+      path: "/not-found",
       pageElement: <NotFoundPage />,
+    },
+    {
+      id: "-2",
+      path: "*",
+      pageElement: <Navigate to="/not-found" replace={true} />,
     },
   ],
 };

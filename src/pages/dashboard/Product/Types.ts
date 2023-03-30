@@ -9,7 +9,18 @@ export type appStateType = {
   items: ItemType[];
 };
 
-export type ItemType = { title: string; _id: string };
+export type ItemType = {
+  titleUz: string;
+  titleRu: string;
+  aboutRu: AboutType[];
+  aboutUz: AboutType[];
+  images: string[];
+  descriptionUz: string;
+  descriptionRu: string;
+  _id: string;
+};
+
+export type AboutType = { variable: string; value: string };
 
 export type appActionType = {
   type: string;

@@ -1,13 +1,11 @@
 import { Divider, Menu } from "antd";
-import { useJWTAuth } from "../../../../auth/jwt-auth/JWTAuthAuthProvider";
+
 import {
   adminMenuRoutes,
   ChildrenType,
   MenuRoutesType,
-  userMenuRoutes,
 } from "../../../../pages/menuRoutes";
-import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const renderMenuItem = (item: ChildrenType) => {
   return (
@@ -33,10 +31,7 @@ const renderMenu = (item: MenuRoutesType) => {
   );
 };
 function MenuGenerator() {
-  const { user } = useJWTAuth();
-
-  const routes = user?.role === "admin" ? adminMenuRoutes : userMenuRoutes;
-  return <>{routes.map(renderMenu)}</>;
+  return <>{adminMenuRoutes.map(renderMenu)}</>;
 }
 
 export default MenuGenerator;

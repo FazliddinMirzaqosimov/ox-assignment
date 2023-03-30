@@ -1,12 +1,13 @@
 import { InboxOutlined } from "@ant-design/icons";
-import { Form, Input, message, Modal, Select, Spin } from "antd";
+import { Col, Form, Input, message, Modal, Row, Select, Spin } from "antd";
 import { useEffect, useState } from "react";
 import { setLoading, setVisible } from "./ReducerActions";
-import { PostEditPropType } from "./Types";
+import { ItemType, PostEditPropType } from "./Types";
 import jwtAxios from "auth/jwt-auth/jwtaxios";
 import Dragger from "antd/es/upload/Dragger";
-import { JwtUserType, useJWTAuth } from "auth/jwt-auth/JWTAuthAuthProvider";
 import { UploadChangeParam, UploadFile } from "antd/es/upload";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 function loadImage(photo: any): any {
   return new Promise((resolve) => {
@@ -22,7 +23,7 @@ function PostEdit({ title, state, getItems, dispatch }: PostEditPropType) {
   // STATES
   // console.log(jwtAxios.defaults.headers.common.Authorization);
 
-  const [editItem, setEditItem] = useState<JwtUserType>(null);
+  const [editItem, setEditItem] = useState<ItemType>(null);
   const [form] = Form.useForm();
   //USEEFFECTS
 
@@ -39,23 +40,27 @@ function PostEdit({ title, state, getItems, dispatch }: PostEditPropType) {
     }
     dispatch(setLoading({ ...state.loading, modal: true }));
 
-    jwtAxios.get(`/users/${state.editItemId}`).then((res) => {
+    jwtAxios.get(`/articles/${state.editItemId}`).then((res) => {
       dispatch(setLoading({ ...state.loading, modal: false }));
 
-      setEditItem(res.data.data.user);
+      setEditItem(res.data.data.article);
     });
   }, [state.editItemId]);
 
-  const postItem = (data: JwtUserType & { photo: any }) => {
+  const postItem = (data: ItemType & { photo: any }) => {
     const formData: FormData = new FormData();
 
-    data?.password && formData.append("password", data?.password);
-    data.photo?.file && formData.append("photo", data.photo.file);
+    data?.titleUz && formData.append("titleUz", data?.titleUz);
+    data?.bodyUz && formData.append("bodyUz", data?.bodyUz);
+    data?.titleRu && formData.append("titleRu", data?.titleRu);
+    data?.bodyRu && formData.append("bodyRu", data?.bodyRu);
+    data.photo?.file && formData.append("media", data.photo.file);
+
     console.log([...formData]);
 
     dispatch(setLoading({ ...state.loading, modal: true }));
     jwtAxios[editItem?._id ? "patch" : "post"](
-      `/users/${editItem?._id || ""}`,
+      `/articles/${editItem?._id || ""}`,
       formData
     )
       .finally(() => {
@@ -96,68 +101,77 @@ function PostEdit({ title, state, getItems, dispatch }: PostEditPropType) {
       visible={state.visible}
       style={{ top: 50 }}
       title={title}
-      width={600}
+      width={900}
     >
       <Spin spinning={state.loading.modal}>
         <Form
           form={form}
           onFinish={handleSubmit}
-          labelCol={{ span: 5 }}
+          // labelCol={{ span: 5 }}
+          layout={"vertical"}
           initialValues={{
             role: "user",
           }}
         >
-          <Form.Item
-            name="email"
-            label={"Email"}
-            rules={[
-              {
-                required: true,
-                message: "you need to provide email",
-              },
-            ]}
-            hasFeedback
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="name"
-            label={"Name"}
-            rules={[
-              {
-                required: true,
-                message: "You need to provide name",
-              },
-            ]}
-            hasFeedback
-          >
-            <Input />
-          </Form.Item>
-          {!state.editItemId ? (
-            <Form.Item
-              name="password"
-              label={"Password"}
-              rules={[
-                {
-                  required: true,
-                  message: "You need to provide password",
-                },
-              ]}
-              hasFeedback
-            >
-              <Input />
-            </Form.Item>
-          ) : (
-            ""
-          )}
-          <Form.Item name="role" label={"Role"} hasFeedback>
-            <Select
-              options={[
-                { value: "admin", label: "Admin" },
-                { value: "user", label: "User" },
-              ]}
-            />
-          </Form.Item>
+          <Row justify={"space-between"}>
+            <Col style={{ width: "47%" }}>
+              {" "}
+              <Form.Item
+                name="titleUz"
+                label={"Title (uz)"}
+                rules={[
+                  {
+                    required: true,
+                    message: "You need to provide title in uzbek",
+                  },
+                ]}
+                hasFeedback
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                name={"bodyUz"}
+                label="Body (uz)"
+                rules={[
+                  {
+                    required: true,
+                    message: "You need to provide body in uzbek",
+                  },
+                ]}
+              >
+                <ReactQuill theme="snow" />
+              </Form.Item>
+            </Col>
+            <Col style={{ width: "47%" }}>
+              {" "}
+              <Form.Item
+                name="titleRu"
+                label={"Title (ru)"}
+                rules={[
+                  {
+                    required: true,
+                    message: "You need to provide title in russian",
+                  },
+                ]}
+                hasFeedback
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                name={"bodyRu"}
+                label="Body (uz)"
+                rules={[
+                  {
+                    required: true,
+                    message: "You need to provide body in russian",
+                  },
+                ]}
+              >
+                <ReactQuill theme="snow" />
+              </Form.Item>
+            </Col>
+          </Row>
+
           <Form.Item name="photo">
             <Dragger
               beforeUpload={() => false}

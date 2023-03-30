@@ -24,7 +24,7 @@ function AppMenu({ open, setOpen }: PropType) {
       width={240}
     >
       {" "}
-      <div className="menu">
+      <div className="menu" onClick={() => setOpen(false)}>
         <MenuGenerator />
 
         <Divider orientation="left">

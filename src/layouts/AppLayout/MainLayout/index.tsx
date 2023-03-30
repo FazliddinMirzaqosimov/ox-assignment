@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Layout } from "antd";
 import NavBar from "./NavBar";
-import Component from "./Component";
 import AppMenu from "./AppMenu";
+import Content from "./Content";
 
 const MainLayout: React.FC = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -13,7 +13,7 @@ const MainLayout: React.FC = () => {
 
       <NavBar {...{ open, setOpen }} />
 
-      <Component />
+      <Content />
     </Layout>
   );
 };

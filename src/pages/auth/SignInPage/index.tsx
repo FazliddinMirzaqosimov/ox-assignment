@@ -17,15 +17,15 @@ function SignInPage() {
         style={{
           width: "400px",
         }}
-        initialValues={{ email: "fazliddin@gmail.com", password: "1212qwqw" }}
+        initialValues={{ name: "fazliddin", password: "1212qwqw" }}
         onFinish={signInUser}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
         <Form.Item
-          label="Email"
-          name="email"
-          rules={[{ required: true, message: "Please input your email!" }]}
+          label="Name"
+          name="name"
+          rules={[{ required: true, message: "Please input your name!" }]}
         >
           <Input />
         </Form.Item>
@@ -37,9 +37,6 @@ function SignInPage() {
         >
           <Input.Password />
         </Form.Item>
-        <p>
-          No account? Then <Link to="/auth/signup">Sign up</Link>
-        </p>
         <br />
         <Form.Item>
           <Button type="primary" htmlType="submit">

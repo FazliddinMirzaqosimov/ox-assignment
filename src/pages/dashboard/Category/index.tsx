@@ -1,20 +1,30 @@
-import { SyncOutlined } from "@ant-design/icons";
-import { Button, Col, Input, message, Row, Space, Spin } from "antd";
+import {
+  EyeOutlined,
+  FileImageOutlined,
+  SyncOutlined,
+} from "@ant-design/icons";
+import {
+  Avatar,
+  Button,
+  Col,
+  Image,
+  Input,
+  message,
+  Row,
+  Space,
+  Spin,
+} from "antd";
 import MainTable from "../../../components/Table";
 import { useEffect, useMemo, useReducer } from "react";
-import PostEdit from "../../dashboard/SectionPage/PostEdit";
+import PostEdit from "./PostEdit";
 import {
   setEditItemId,
   setInput,
   setItems,
   setLoading,
   setVisible,
-} from "../../dashboard/SectionPage/ReducerActions";
-import {
-  appActionType,
-  appStateType,
-  ItemType,
-} from "../../dashboard/SectionPage/Types";
+} from "./ReducerActions";
+import { appActionType, appStateType, CategoryType } from "./Types";
 import jwtAxios from "auth/jwt-auth/jwtaxios";
 
 function reducer(state: appStateType, action: appActionType): appStateType {
@@ -34,7 +44,7 @@ function reducer(state: appStateType, action: appActionType): appStateType {
   }
 }
 
-const SectionPage = () => {
+const Category = () => {
   const [state, dispatch] = useReducer(reducer, {
     visible: false,
     editItemId: "",
@@ -43,13 +53,15 @@ const SectionPage = () => {
     items: [],
   });
   const { state: linkState }: { state: { title: string } } = {
-    state: { title: "Topics" },
+    state: { title: "Tests" },
   };
 
   const filteredItems = useMemo(
     () =>
-      state.items.filter((item: ItemType) =>
-        item?.title?.toLowerCase().includes(state.input)
+      state.items.filter(
+        (item: CategoryType) =>
+          item?.nameUz?.toLowerCase().includes(state.input) ||
+          item?.nameRu?.toLowerCase().includes(state.input)
       ),
     [state.input, state.items]
   );
@@ -58,17 +70,20 @@ const SectionPage = () => {
     dispatch(setItems([]));
     dispatch(setLoading({ ...state.loading, table: true }));
 
-    jwtAxios.get(`/sections`).then((res) => {
-      const sections: ItemType[] = res.data.data.sections;
+    jwtAxios.get(`/categories`).then((res) => {
+      console.log(res.data.data.categories);
+
+      const categories: CategoryType[] = res.data.data.categories;
 
       dispatch(setLoading({ ...state.loading, table: false }));
-      dispatch(setItems(sections));
+      dispatch(setItems(categories));
     });
   };
+
   const deleteItem = ({ _id: id }: { _id: string }) => {
     dispatch(setLoading({ ...state.loading, table: true }));
     jwtAxios
-      .delete(`/sections/${id}`)
+      .delete(`/categories/${id}`)
       .then(() => {
         getItems();
         message.success("Deleted succesfully");
@@ -81,7 +96,7 @@ const SectionPage = () => {
       });
   };
 
-  const editBtn = (item: ItemType) => {
+  const editBtn = (item: CategoryType) => {
     dispatch(setEditItemId(item?._id || ""));
     dispatch(setVisible(true));
   };
@@ -91,8 +106,34 @@ const SectionPage = () => {
   const columns = [
     {
       key: 1,
-      dataIndex: "title",
-      title: "Title",
+      dataIndex: "nameUz",
+      title: "Name (uz)",
+    },
+    {
+      key: 2,
+      dataIndex: "nameRu",
+      title: "Name (ru)",
+    },
+
+    {
+      key: 4,
+      title: "Image",
+      dataIndex: "image",
+      width: 80,
+      render: (image: string) => {
+        return image ? (
+          <Image
+            src={`${process.env.REACT_APP_API_URL}/img/${image}`}
+            style={{ height: 40, width: 40, objectFit: "cover" }}
+            preview={{
+              maskClassName: "customize-mask",
+              mask: <EyeOutlined />,
+            }}
+          />
+        ) : (
+          <Avatar size={"large"} shape="square" icon={<FileImageOutlined />} />
+        );
+      },
     },
   ];
 
@@ -147,4 +188,4 @@ const SectionPage = () => {
   );
 };
 
-export default SectionPage;
+export default Category;

@@ -1,7 +1,7 @@
 import RouteGenerator from "layouts/AppLayout/routeGenerator";
 import React from "react";
 
-function Component() {
+function Content() {
   return (
     <div className="content">
       <RouteGenerator />
@@ -9,4 +9,4 @@ function Component() {
   );
 }
 
-export default Component;
+export default Content;

@@ -7,7 +7,6 @@ import { message } from "antd";
 
 const JWTAuthActionsContext = createContext<JWTAuthActionType>({
   signInUser: (a: signInTypes) => {},
-  signUpUser: (a: signUpTypes) => {},
   logout: () => {},
 });
 const JWTAuthContext = createContext<JWTAuthDataType>({
@@ -22,11 +21,9 @@ export const useJWTAuthActions = () => useContext(JWTAuthActionsContext);
 
 export type JwtUserType = null | {
   _id: string;
-  email: string;
-  name: string;
+
+  username: string;
   password?: string;
-  photo?: string;
-  role: "admin" | "user";
 };
 
 export type JWTAuthDataType = {
@@ -35,12 +32,10 @@ export type JWTAuthDataType = {
   isLoading: boolean;
 };
 
-type signInTypes = { email: string; password: string };
-type signUpTypes = { email: string; name: string; password: string };
+type signInTypes = { name: string; password: string };
 
 export type JWTAuthActionType = {
   signInUser: (a: signInTypes) => void;
-  signUpUser: (a: signUpTypes) => void;
   logout: () => void;
 };
 
@@ -56,6 +51,7 @@ const JWTAuthAuthProvider = ({ children }: PropType) => {
   });
 
   const navigator = useNavigate();
+
   useEffect(() => {
     const getAuthUser = () => {
       const token = localStorage.getItem("token"),
@@ -71,17 +67,18 @@ const JWTAuthAuthProvider = ({ children }: PropType) => {
       }
       setToken(token);
       jwtAxios
-        .get("/users/" + id)
+        .get("/admins/" + id)
         .then(
           ({
             data: {
-              data: { user },
+              data: { admin },
             },
           }: {
-            data: { data: { user: JwtUserType } };
+            data: { data: { admin: JwtUserType } };
           }) => {
+            // navigator("/");
             return setJWTAuthData({
-              user: user,
+              user: admin,
               isLoading: false,
               isAuthenticated: true,
             });
@@ -99,53 +96,38 @@ const JWTAuthAuthProvider = ({ children }: PropType) => {
     getAuthUser();
   }, []);
 
-  const signInUser = async ({ email, password }: signInTypes) => {
+  const signInUser = async ({ name, password }: signInTypes) => {
     setJWTAuthData({
       ...JWTAuthData,
       isLoading: true,
     });
     try {
-      const { data } = await jwtAxios.post("/users/signin", {
-        email,
-        password,
-      });
+      const { data } = await jwtAxios.post(
+        "/admins/login",
+        {
+          username: name,
+          password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      setToken(data.data.token, data.data.user._id);
+      setToken(data.data.token, data.data.admin._id);
 
       setJWTAuthData({
-        user: data.data.user,
+        user: data.data.admin,
         isAuthenticated: true,
         isLoading: false,
       });
       navigator("/");
     } catch (error: any) {
+      console.log(error);
+
       message.error(error?.response?.data?.error || error?.message, 2);
 
-      setJWTAuthData({
-        ...JWTAuthData,
-        isAuthenticated: false,
-        isLoading: false,
-      });
-    }
-  };
-
-  const signUpUser = async ({ name, email, password }: signUpTypes) => {
-    try {
-      const { data } = await jwtAxios.post("/users/signup", {
-        name,
-        email,
-        password,
-      });
-
-      setToken(data.data.token, data.data.user._id);
-      setJWTAuthData({
-        user: data.data.user,
-        isAuthenticated: true,
-        isLoading: false,
-      });
-      navigator("/");
-    } catch (error: any) {
-      message.error(error?.response?.data?.error || error?.message, 2);
       setJWTAuthData({
         ...JWTAuthData,
         isAuthenticated: false,
@@ -173,7 +155,6 @@ const JWTAuthAuthProvider = ({ children }: PropType) => {
     >
       <JWTAuthActionsContext.Provider
         value={{
-          signUpUser,
           signInUser,
           logout,
         }}

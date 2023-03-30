@@ -24,7 +24,7 @@ import {
   setLoading,
   setVisible,
 } from "./ReducerActions";
-import { appActionType, appStateType, TestType } from "./Types";
+import { appActionType, appStateType, ItemType } from "./Types";
 import jwtAxios from "auth/jwt-auth/jwtaxios";
 
 function reducer(state: appStateType, action: appActionType): appStateType {
@@ -44,7 +44,7 @@ function reducer(state: appStateType, action: appActionType): appStateType {
   }
 }
 
-const QuizPage = () => {
+const ArticlePage = () => {
   const [state, dispatch] = useReducer(reducer, {
     visible: false,
     editItemId: "",
@@ -52,14 +52,19 @@ const QuizPage = () => {
     loading: { table: false, modal: false },
     items: [],
   });
+
   const { state: linkState }: { state: { title: string } } = {
-    state: { title: "Tests" },
+    state: { title: "Topics" },
   };
 
   const filteredItems = useMemo(
     () =>
-      state.items.filter((item: TestType) =>
-        item?.question?.toLowerCase().includes(state.input)
+      state.items.filter(
+        (item: ItemType) =>
+          item?.titleUz?.toLowerCase().includes(state.input) ||
+          item?.bodyUz?.toLowerCase().includes(state.input) ||
+          item?.titleRu?.toLowerCase().includes(state.input) ||
+          item?.bodyRu?.toLowerCase().includes(state.input)
       ),
     [state.input, state.items]
   );
@@ -68,18 +73,18 @@ const QuizPage = () => {
     dispatch(setItems([]));
     dispatch(setLoading({ ...state.loading, table: true }));
 
-    jwtAxios.get(`/tests`).then((res) => {
-      const tests: TestType[] = res.data.data.tests;
+    jwtAxios.get(`/articles`).then((res) => {
+      const sections: ItemType[] = res.data.data.articles;
 
       dispatch(setLoading({ ...state.loading, table: false }));
-      dispatch(setItems(tests));
+      dispatch(setItems(sections));
     });
   };
 
   const deleteItem = ({ _id: id }: { _id: string }) => {
     dispatch(setLoading({ ...state.loading, table: true }));
     jwtAxios
-      .delete(`/tests/${id}`)
+      .delete(`/articles/${id}`)
       .then(() => {
         getItems();
         message.success("Deleted succesfully");
@@ -92,7 +97,7 @@ const QuizPage = () => {
       });
   };
 
-  const editBtn = (item: TestType) => {
+  const editBtn = (item: ItemType) => {
     dispatch(setEditItemId(item?._id || ""));
     dispatch(setVisible(true));
   };
@@ -102,19 +107,23 @@ const QuizPage = () => {
   const columns = [
     {
       key: 1,
-      dataIndex: "question",
-      title: "Question",
+      dataIndex: "titleUz",
+      title: "Title (uz)",
     },
-
     {
-      key: 4,
+      key: 2,
+      dataIndex: "titleRu",
+      title: "Title (ru)",
+    },
+    {
+      key: 3,
       title: "Image",
       dataIndex: "image",
       width: 80,
-      render: (image: string) => {
-        return image ? (
+      render: (imgUrl: string) => {
+        return imgUrl && imgUrl !== "undefined" ? (
           <Image
-            src={`${image}`}
+            src={`${process.env.REACT_APP_API_URL}/img/${imgUrl}`}
             style={{ height: 40, width: 40, objectFit: "cover" }}
             preview={{
               maskClassName: "customize-mask",
@@ -179,4 +188,4 @@ const QuizPage = () => {
   );
 };
 
-export default QuizPage;
+export default ArticlePage;

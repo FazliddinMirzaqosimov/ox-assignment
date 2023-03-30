@@ -1,4 +1,3 @@
-import React from "react";
 import { AiFillStop } from "react-icons/ai";
 
 export type MenuRoutesType = {
@@ -14,68 +13,34 @@ export type ChildrenType = {
   icon: JSX.Element;
 };
 
-export const userMenuRoutes: MenuRoutesType[] = [
-  {
-    id: "user",
-    type: "group",
-    name: "User pages",
-    children: [
-      {
-        id: "1",
-        link: "/sample/home",
-        title: "Home Page",
-        icon: <AiFillStop />,
-      },
-      {
-        id: "2",
-        link: "/sample/topics",
-        title: "Test Page",
-        icon: <AiFillStop />,
-      },
-    ],
-  },
-];
 export const adminMenuRoutes: MenuRoutesType[] = [
-  {
-    id: "user",
-    type: "group",
-    name: "User pages",
-    children: [
-      {
-        id: "1",
-        link: "/sample/home",
-        title: "Home Page",
-        icon: <AiFillStop />,
-      },
-      {
-        id: "2",
-        link: "/sample/topics",
-        title: "Test Page",
-        icon: <AiFillStop />,
-      },
-    ],
-  },
   {
     id: "admin",
     type: "group",
     name: "Admin pages",
     children: [
       {
+        id: "2",
+        link: "/dashboard/articles",
+        title: "Articles",
+        icon: <AiFillStop />,
+      },
+      {
         id: "3",
-        link: "/dashboard/topics",
-        title: "Topics Page",
+        link: "/dashboard/products",
+        title: "Products",
         icon: <AiFillStop />,
       },
       {
         id: "4",
-        link: "/dashboard/tests",
-        title: "Tests Page",
+        link: "/dashboard/categories",
+        title: "Categories",
         icon: <AiFillStop />,
       },
       {
         id: "5",
-        link: "/dashboard/users",
-        title: "Users Page",
+        link: "/dashboard/admins",
+        title: "Admins",
         icon: <AiFillStop />,
       },
     ],
