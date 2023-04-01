@@ -1,22 +1,20 @@
 import axios from "axios";
 
 const jwtAxios = axios.create({
-  baseURL: "http://localhost:3000/api/v1",
+  baseURL: "https://toko.ox-sys.com",
   headers: {
     "Content-Type":
-      "multipart/form-data; boundary=<calculated when request is sent>",
-  },
+      "application/x-www-form-urlencoded'",
+   },
 });
-export const setToken = (token?: string, id?: string) => {
+export const setToken = (token?: string) => {
   if (token) {
     jwtAxios.defaults.headers.common.Authorization = `Bearer ${token}`;
     localStorage.setItem("token", token);
-    id && localStorage.setItem("id", id);
-  } else {
+   } else {
     delete jwtAxios.defaults.headers.common.Authorization;
     localStorage.removeItem("token");
-    localStorage.removeItem("id");
-  }
+   }
 };
 
 export default jwtAxios;

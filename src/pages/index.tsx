@@ -1,7 +1,8 @@
 import { Navigate } from "react-router-dom";
 import { authPages } from "./auth";
-import { dashboardPages } from "./dashboard";
+
 import NotFoundPage from "./NotFoundPage";
+import { dashboardPages } from "./dashboard";
 
 export const unAuthorizedStructure = {
   paths: [
@@ -30,7 +31,7 @@ export const authorizedStructure = {
     {
       id: "0",
       path: "/",
-      pageElement: <Navigate to="dashboard/articles" replace={true} />,
+      pageElement: <Navigate to="dashboard/products" replace={true} />,
     },
     {
       id: "-1",

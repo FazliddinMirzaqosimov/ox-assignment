@@ -17,7 +17,7 @@ function SignInPage() {
         style={{
           width: "400px",
         }}
-        initialValues={{ name: "fazliddin", password: "1212qwqw" }}
+        initialValues={{ name: "user_task", password: "user_task" }}
         onFinish={signInUser}
         onFinishFailed={onFinishFailed}
         autoComplete="off"

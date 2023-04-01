@@ -19,28 +19,11 @@ export const adminMenuRoutes: MenuRoutesType[] = [
     type: "group",
     name: "Admin pages",
     children: [
-      {
-        id: "2",
-        link: "/dashboard/articles",
-        title: "Articles",
-        icon: <AiFillStop />,
-      },
-      {
-        id: "3",
-        link: "/dashboard/products",
-        title: "Products",
-        icon: <AiFillStop />,
-      },
-      {
-        id: "4",
-        link: "/dashboard/categories",
-        title: "Categories",
-        icon: <AiFillStop />,
-      },
+     
       {
         id: "5",
-        link: "/dashboard/admins",
-        title: "Admins",
+        link: "/dashboard/products",
+        title: "Products",
         icon: <AiFillStop />,
       },
     ],
