@@ -1,4 +1,4 @@
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, notification } from "antd";
 import { useJWTAuthActions } from "auth/jwt-auth/JWTAuthAuthProvider";
 import { Link } from "react-router-dom";
 import AuthWrapper from "../AuthWrapper";
@@ -15,27 +15,25 @@ function SignInPage() {
         layout="vertical"
         name="basic"
         style={{
-          width: "400px",
+          width: "clamp(100px, 50vw, 400px)",
         }}
-        initialValues={{ name: "user_task", password: "user_task" }}
-        onFinish={signInUser}
+        // initialValues={{ name: "user_task", password: "user_task" }}
+        onFinish={(data) => {
+          if (data.password === "Oybek") {
+            signInUser();
+            return;
+          }
+          notification.error({message:"Password is incorrect!"})
+        }}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-        <Form.Item
-          label="Name"
-          name="name"
-          rules={[{ required: true, message: "Please input your name!" }]}
-        >
-          <Input />
-        </Form.Item>
-
         <Form.Item
           label="Password"
           name="password"
           rules={[{ required: true, message: "Please input your password!" }]}
         >
-          <Input.Password />
+          <Input.Password  />
         </Form.Item>
         <br />
         <Form.Item>

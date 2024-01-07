@@ -10,7 +10,7 @@ function AuthWrapper({ children }: PropType) {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-      }}
+       }}
     >
       {children}
     </Card>

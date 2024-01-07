@@ -7,7 +7,7 @@ import { message } from "antd";
 import axios from "axios";
 
 const JWTAuthActionsContext = createContext<JWTAuthActionType>({
-  signInUser: (a: signInTypes) => {},
+  signInUser: ( ) => {},
   logout: () => {},
 });
 const JWTAuthContext = createContext<JWTAuthDataType>({
@@ -32,7 +32,7 @@ export type JWTAuthDataType = {
 type signInTypes = { name: string; password: string };
 
 export type JWTAuthActionType = {
-  signInUser: (a: signInTypes) => void;
+  signInUser: ( ) => void;
   logout: () => void;
 };
 
@@ -59,9 +59,8 @@ const JWTAuthAuthProvider = ({ children }: PropType) => {
   }, []);
   const navigator = useNavigate();
 
-  const signInUser = async ({ name, password }: signInTypes) => {
-    console.log({ name, password });
-
+  const signInUser = async ( ) => {
+ 
     setJWTAuthData({
       ...JWTAuthData,
       isLoading: true,
@@ -69,7 +68,7 @@ const JWTAuthAuthProvider = ({ children }: PropType) => {
     try {
       const res = await jwtAxios.post(
         "/security/auth_check",
-        `_username=${name}&_password=${password}&_subdomain=toko`,
+        `_username=user_task&_password=user_task&_subdomain=toko`,
         {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
